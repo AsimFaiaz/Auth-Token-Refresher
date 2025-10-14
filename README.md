@@ -48,7 +48,7 @@
 
   <h2>Example Usage</h2>
   <pre>
-  using Demo.Auth;
+using Demo.Auth;
 
   // Example: JWT token from your API
   static async Task&lt;AccessToken&gt; FetchJwtAsync(CancellationToken ct)
