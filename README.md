@@ -191,6 +191,33 @@ using Demo.Auth;
     and never spam your auth endpoint again.
   </p>
 
+  <h2>Manual Testing - .NET Fiddle</h2>
+  <pre>
+//To Test in .NET Fiddle simply paste this code under the main CS code
+    public static class Program
+    {
+        public static async Task Main()
+        {
+            // Fake token fetcher — expires after 15 seconds
+            async Task<AccessToken> FetchAsync(CancellationToken _)
+            {
+                await Task.Delay(500);
+                return new AccessToken(Guid.NewGuid().ToString("N"), DateTimeOffset.UtcNow.AddSeconds(15));
+            }
+
+            var refresher = new TokenRefresher(FetchAsync, TimeSpan.FromSeconds(5));
+            
+            for (int i = 0; i < 12; i++)
+            {
+                var token = await refresher.GetValidTokenAsync();
+                Console.WriteLine($"[{DateTime.UtcNow:HH:mm:ss}] Got token: {token.Value[..8]}..., exp: {token.ExpiresAtUtc:HH:mm:ss}");
+                await Task.Delay(2000);
+            }
+            Console.WriteLine("Done.....");
+        }
+    }
+  </pre>
+
   <section id="tech-stack">
     <h2>Tech Stack</h2>
     <pre>☑ C# (.NET 8 or newer)</pre>
